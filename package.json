@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "ibm_db": "^3.2.4",
+    "jdbc": "^0.7.6",
+    "odbc": "^2.4.8"
+  },
+  "name": "teste-ibm",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index2.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
