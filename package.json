@@ -4,14 +4,26 @@
     "jdbc": "^0.7.6",
     "odbc": "^2.4.8"
   },
-  "name": "teste-ibm",
+  "name": "jdbc-db2-connect",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "dev": "node index2.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "author": "Gabriel Butarelo",
+  "license": "MIT",
+  "description": "Connect in db2 using jdbc in node",
+  "directories": {
+    "lib": "lib"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabrielButarelo/jdbc-db2-connect.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GabrielButarelo/jdbc-db2-connect/issues"
+  },
+  "homepage": "https://github.com/GabrielButarelo/jdbc-db2-connect#readme"
 }
