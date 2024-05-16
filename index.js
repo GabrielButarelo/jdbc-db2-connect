@@ -4,7 +4,15 @@ var jinst = require("jdbc/lib/jinst");
 let instanceConnection = null;
 
 function DB2Initialize(configData) {
-  try {
+  return new Promise((resolve, reject) => {
+    if (instanceConnection) reject("Connection already exists!");
+
+    if (
+      !configData ||
+      !configData.url | !configData.user | !configData.password
+    )
+      reject("Config is invalid!");
+
     if (!jinst.isJvmCreated()) {
       jinst.addOption("-Xrs");
       jinst.setupClasspath(["./lib/jt400.jar"]);
@@ -22,38 +30,36 @@ function DB2Initialize(configData) {
     const jdbc = new JDBC(config);
 
     jdbc.initialize((error) => {
-      if (error) throw new Error(error);
+      if (error) reject(error);
     });
 
     jdbc.reserve((error, connection) => {
-      if (error) throw new Error(error);
+      if (error) reject(error);
 
       instanceConnection = connection.conn;
+
+      resolve(connection.conn);
     });
-  } catch (error) {
-    console.error(error);
-  }
+  });
 }
 
-async function DB2ExecuteQuery(query, callback) {
-  try {
-    if (!instanceConnection) throw new Error("Connection not found!");
+async function DB2ExecuteQuery(query) {
+  return new Promise((resolve, reject) => {
+    if (!instanceConnection) reject("Connection not found!");
 
     instanceConnection.createStatement((error, statement) => {
-      if (error) callback(error);
+      if (error) reject(error);
 
       statement.executeQuery(query, (error, resultSet) => {
-        if (error) callback(error);
+        if (error) reject(error);
 
         resultSet.toObjArray(function (error, results) {
-          if (error) callback(error);
-          callback(null, results);
+          if (error) reject(error);
+          resolve(results);
         });
       });
     });
-  } catch (error) {
-    console.error(error);
-  }
+  });
 }
 
 module.exports = {
