@@ -1,8 +1,6 @@
 {
   "dependencies": {
-    "ibm_db": "^3.2.4",
-    "jdbc": "^0.7.6",
-    "odbc": "^2.4.8"
+    "jdbc": "^0.7.6"
   },
   "name": "jdbc-db2-connect",
   "version": "1.0.0",
