@@ -1,50 +1,62 @@
 var JDBC = require("jdbc");
 var jinst = require("jdbc/lib/jinst");
 
-if (!jinst.isJvmCreated()) {
-  jinst.addOption("-Xrs");
-  jinst.setupClasspath([""]);
+let instanceConnection = null;
+
+function DB2Initialize(configData) {
+  try {
+    if (!jinst.isJvmCreated()) {
+      jinst.addOption("-Xrs");
+      jinst.setupClasspath(["./lib/jt400.jar"]);
+    }
+
+    const config = {
+      url: configData.url,
+      drivername: "com.ibm.as400.access.AS400JDBCDriver",
+      minpoolsize: 1,
+      maxpoolsize: 10,
+      user: configData.user,
+      password: configData.password,
+    };
+
+    const jdbc = new JDBC(config);
+
+    jdbc.initialize((error) => {
+      if (error) throw new Error(error);
+    });
+
+    jdbc.reserve((error, connection) => {
+      if (error) throw new Error(error);
+
+      instanceConnection = connection.conn;
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-var config = {
-  url: "",
-  drivername: "com.ibm.as400.access.AS400JDBCDriver",
-  minpoolsize: 1,
-  maxpoolsize: 100,
-  user: "",
-  password: "",
-  properties: {},
-};
+async function DB2ExecuteQuery(query, callback) {
+  try {
+    if (!instanceConnection) throw new Error("Connection not found!");
 
-var sforcesqldb = new JDBC(config);
+    instanceConnection.createStatement((error, statement) => {
+      if (error) callback(error);
 
-sforcesqldb.initialize(function (err) {
-  if (err) {
-    console.log(err);
+      statement.executeQuery(query, (error, resultSet) => {
+        if (error) callback(error);
+
+        resultSet.toObjArray(function (error, results) {
+          if (error) callback(error);
+          callback(null, results);
+        });
+      });
+    });
+  } catch (error) {
+    console.error(error);
   }
-});
+}
 
-sforcesqldb.reserve(function (err, connObjs) {
-  var conn = connObjs.conn;
-
-  conn.createStatement(function (err, statement) {
-    if (err) {
-      console.log(err);
-    } else {
-      statement.executeQuery(
-        "SELECT * FROM HCRMFIL.FBES LIMIT 1",
-        function (err, resultset) {
-          if (err) {
-            console.log(err);
-          } else {
-            resultset.toObjArray(function (err, results) {
-              if (results.length > 0) {
-                console.log("ID: " + JSON.stringify(results));
-              }
-            });
-          }
-        }
-      );
-    }
-  });
-});
+module.exports = {
+  DB2Initialize,
+  DB2ExecuteQuery,
+};

@@ -8,7 +8,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "node index2.js"
+    "dev": "node teste.js"
   },
   "keywords": [],
   "author": "Gabriel Butarelo",
