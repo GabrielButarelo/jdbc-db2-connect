@@ -9,7 +9,9 @@ function DB2Initialize(configData) {
 
     if (
       !configData ||
-      !configData.url | !configData.user | !configData.password
+      !configData.url ||
+      !configData.user ||
+      !configData.password
     )
       reject("Config is invalid!");
 
@@ -57,6 +59,23 @@ async function DB2ExecuteQuery(query) {
           if (error) reject(error);
           resolve(results);
         });
+      });
+    });
+  });
+}
+
+async function DB2ExecuteQuery(query, callback) {
+  if (!instanceConnection) callback("Instancia nao encontrada");
+
+  instanceConnection.createStatement((error, statement) => {
+    if (error) callback(error);
+
+    statement.executeQuery(query, (error, resultSet) => {
+      if (error) callback(error);
+
+      resultSet.toObjArray(function (error, results) {
+        if (error) callback(error);
+        callback(null, results);
       });
     });
   });
