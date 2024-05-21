@@ -3,7 +3,7 @@
     "jdbc": "^0.7.6"
   },
   "name": "jdbc-db2-connect",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "scripts": {
     "dev": "node teste.js"
