@@ -8,7 +8,13 @@
   "scripts": {
     "dev": "node teste.js"
   },
-  "keywords": [],
+  "keywords": [
+    "ibm",
+    "db2",
+    "jdbc",
+    "database",
+    "as400"
+  ],
   "author": "Gabriel Butarelo",
   "license": "MIT",
   "description": "Connect in db2 using jdbc in node",
